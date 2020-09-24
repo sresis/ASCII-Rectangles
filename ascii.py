@@ -1,4 +1,4 @@
-
+import numpy as np
 def create_blank_canvas(canvas_len=10, canvas_height=10):
     """ Create a blank canvas."""
     # makes the row of the canvas length
@@ -36,18 +36,22 @@ def create_rectangle(start_x, start_y, end_x, end_y, fill_char, canvas):
         j += 1
     return canvas
 
-def change_char(char, canvas): 
+def change_char(char, canvas, start_x, end_x, start_y, end_y): 
     """Changes the rectangle's fill characters."""
 
     # for each non-blank character, replace it with new char
-    i = 0
-    while i < len(canvas):
-        j = 0
-        while j < len(canvas[0]):
-            if canvas[i][j] != ' ':
-                canvas[i][j] = char
-            j += 1
-        i += 1
+    canvas_len = 10
+    canvas_height = 10
+
+    j = 0
+    while j < canvas_len:
+        if j >= start_y and j <= end_y:
+            i = 0
+            while i < canvas_height:
+                if i >= start_x and i <= end_x:
+                    canvas[j][i] = char
+                i += 1
+        j += 1
     return canvas
 
 def validate_start_val(start_val):
@@ -64,6 +68,19 @@ def validate_end_val(start_val, end_val):
         pass
     else:
         end_val = int(input("Invalid! Input end value (1-10):  "))
+
+
+def clear_all_shapes():
+    """clears the canvas."""
+    
+    canvas = create_blank_canvas()
+    return canvas
+def print_canvas(canvas):
+    """prints the canvas."""
+    for item in canvas:
+        new_row = ('').join(item)
+        print(new_row)
+    return canvas
 
 
 
@@ -99,18 +116,20 @@ def prompt_user():
         # updates the canvas
         new_canvas = create_rectangle(start_x, start_y, 
         end_x, end_y, fill_char, canvas)
-        print(new_canvas)
+        print_canvas(new_canvas)
         # updates canvas to be the new canvas 
         canvas = new_canvas
         
         #option to change fill character
+        #need to only apply to current rectangle (use start and end values)
         make_new_char = input('Would you like to change the fill character?(Yes/No)  ')
         if make_new_char == 'yes' or make_new_char == 'Yes':
             new_char = input('Input a new fill character:  ')
-            new_canvas = change_char(new_char, canvas)
+            new_canvas = change_char(new_char, canvas, start_x, end_x, start_y, end_y)
             canvas = new_canvas
-            print(new_canvas)
+            print_canvas(new_canvas)
 
+        print_canvas(canvas)
 
 
 
