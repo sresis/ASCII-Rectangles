@@ -153,7 +153,7 @@ def update_canvas(canvas, rectangle_info):
 
 def validate_start_val(start_val):
     """validates start value."""
-    if start_val >=1 and start_val <= 10:
+    if start_val >=0 and start_val <= 9:
         pass
     else:
         start_val = int(input("Invalid! Input start value (1-10):  "))
@@ -161,7 +161,7 @@ def validate_start_val(start_val):
 
 def validate_end_val(start_val, end_val):
     """validates end value."""
-    if end_val <= 10 and end_val >= start_val:
+    if end_val <= 9 and end_val >= start_val:
         pass
     else:
         end_val = int(input("Invalid! Input end value (1-10):  "))
