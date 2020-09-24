@@ -88,16 +88,8 @@ def change_char(canvas, rectangle_info):
     end_y = rectangle_info[rect_id][4]
     char = input('Input a new fill character:  ')
 
-    j = 0
-    while j < canvas_len:
-        if j >= start_y and j <= end_y:
-            i = 0
-            while i < canvas_height:
-                if i >= start_x and i <= end_x:
-                    canvas[j][i] = char
-                i += 1
-        j += 1
-    return canvas
+    rectangle_info[rect_id] = [char, start_x, end_x, start_y, end_y]
+    return rectangle_info
 
 def axis_shift_input():
     """prompts user for which axis they'd like to shift."""
@@ -116,54 +108,49 @@ def shift_rectangles(rectangle_info, canvas, num=0):
     num = int(input('How many spaces would you like to shift it?  '))
 
     # gets the info of the selected rectangle
-    fill_char = rectangle_info[rect_id][0]
-    start_x = rectangle_info[rect_id][1]
-    end_x = rectangle_info[rect_id][2]
-    start_y = rectangle_info[rect_id][3]
+    fill_char = rectangle_info[rect_id][0] 
+    start_x = rectangle_info[rect_id][1] 
+    end_x = rectangle_info[rect_id][2] 
+    start_y = rectangle_info[rect_id][3] 
     end_y = rectangle_info[rect_id][4]
-    # clears existing rectangle from canvas
-    j = 0
-    while j < 10:
-        if j >= start_y and j <= end_y:
-            i = 0
-            while i < 10:
-                if i >= start_x and i <= end_x and canvas[j][i] == fill_char:
-                    canvas[j][i] =  ' '
-                i += 1
-        j += 1
-    j = 0
-    
-    #updates values for rect
+
+    #updates the info depending on axis input
     if axis == 'x':
-        start_x = start_x + num
-        end_x = end_x + num
+        start_x += num
+        end_x += num
+    if axis == 'y':
+        start_y += num
+        end_y += num
+
+    ## update info in dictionary
+    rectangle_info[rect_id] = [fill_char, start_x, end_x, start_y, end_y]
+    return rectangle_info
+
+
+def update_canvas(canvas, rectangle_info):
+    """ updates the canvas based on the rectangle attributes."""
+    canvas = create_blank_canvas()
+    for rectangle in rectangle_info:
+        fill_char = rectangle_info[rectangle][0]
+        start_x = rectangle_info[rectangle][1]
+        end_x = rectangle_info[rectangle][2]
+        start_y = rectangle_info[rectangle][3]
+        end_y = rectangle_info[rectangle][4]
+
+        # updates the canvas with rectangle info
         j = 0
         while j < 10:
             if j >= start_y and j <= end_y:
                 i = 0
                 while i < 10:
                     if i >= start_x and i <= end_x:
-                        canvas[j][i] =  fill_char
+                        canvas[j][i] = fill_char
                     i += 1
             j += 1
-        j = 0
-    
-    elif axis == 'y':
-        start_y = start_y + num
-        end_y = end_y + num
-        j = 0
-        while j < 10:
-            if j >= start_y and j <= end_y:
-                i = 0
-                while i < 10:
-                    if i >= start_x and i <= end_x:
-                        canvas[j][i] =  fill_char
-                    i += 1
-            j += 1
-        j = 0
+
     return canvas
 
-    
+
 def validate_start_val(start_val):
     """validates start value."""
     if start_val >=1 and start_val <= 10:
@@ -226,21 +213,21 @@ def prompt_user():
             # updates the canvas
             new_canvas = create_rectangle(start_x, start_y, 
             end_x, end_y, fill_char, canvas)
-            print_canvas(new_canvas)
             rectangle_info = store_rectangle(rectangle_info, fill_char, start_x, end_x, start_y, end_y)
-            print(rectangle_info)
             # updates canvas to be the new canvas 
-            canvas = new_canvas
+            canvas = update_canvas(canvas, rectangle_info)
+            print_canvas(canvas)
             
         #option to change fill character
         if user_choice == 'b':
-            new_canvas = change_char(canvas, rectangle_info)
-            canvas = new_canvas
-            print_canvas(new_canvas)
+            rectangle_info = change_char(canvas, rectangle_info)
+            canvas = update_canvas(canvas, rectangle_info)
+            print_canvas(canvas)
         if user_choice == 'c':
-            new_canvas = shift_rectangles(rectangle_info, canvas)
-            print(new_canvas)
-        
+            rectangle_info = shift_rectangles(rectangle_info, canvas)
+            canvas = update_canvas(canvas, rectangle_info)
+            print_canvas(canvas)
+
         if user_choice == 'd':
             rectangle_info = clear_rectangle_info()
             canvas = create_blank_canvas()
