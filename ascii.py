@@ -1,6 +1,4 @@
 
-import numpy as np
-
 def create_blank_canvas(canvas_len=10, canvas_height=10):
     """ Create a blank canvas."""
     # makes the row of the canvas length
@@ -38,11 +36,19 @@ def create_rectangle(start_x, start_y, end_x, end_y, fill_char, canvas):
         j += 1
     return canvas
 
-def change_char(char): 
+def change_char(char, canvas): 
     """Changes the rectangle's fill characters."""
-    # get the rectangle
 
     # for each non-blank character, replace it with new char
+    i = 0
+    while i < len(canvas):
+        j = 0
+        while j < len(canvas[0]):
+            if canvas[i][j] != ' ':
+                canvas[i][j] = char
+            j += 1
+        i += 1
+    return canvas
 
 def validate_start_val(start_val):
     """validates start value."""
@@ -50,6 +56,16 @@ def validate_start_val(start_val):
         pass
     else:
         start_val = int(input("Invalid! Input start value (1-10):  "))
+
+
+def validate_end_val(start_val, end_val):
+    """validates end value."""
+    if end_val <= 10 and end_val >= start_val:
+        pass
+    else:
+        end_val = int(input("Invalid! Input end value (1-10):  "))
+
+
 
 def prompt_user():
     """prompts user to create rectangle."""
@@ -63,23 +79,38 @@ def prompt_user():
 
     continue_playing = input('Would you like to play? (Yes/No)?  ')
     
-    while continue_playing == 'Yes':
+    while continue_playing == 'Yes' or continue_playing == 'yes':
 
         ## prompt for inputs
         start_x = int(input("Start rectangle in column (1-10):  "))
         # form validation
         validate_start_val(start_x)
         end_x = int(input("End rectangle in column (1-10):  "))
+        validate_end_val(start_x, end_x)
+        
         start_y = int(input("Start rectangle in row (1-10):  "))
         # form validation
         validate_start_val(start_x)
         end_y = int(input("End rectangle in row (1-10):  "))
+        validate_end_val(start_y, end_y)
         fill_char = input("Choose a single character to fill rectangle:  ")
+        if len(fill_char) > 1:
+            fill_char = input("Error! Choose a single character:  ")
+        # updates the canvas
         new_canvas = create_rectangle(start_x, start_y, 
         end_x, end_y, fill_char, canvas)
         print(new_canvas)
-        #resets canvas to be the new canvas 
+        # updates canvas to be the new canvas 
         canvas = new_canvas
+        
+        #option to change fill character
+        make_new_char = input('Would you like to change the fill character?(Yes/No)  ')
+        if make_new_char == 'yes' or make_new_char == 'Yes':
+            new_char = input('Input a new fill character:  ')
+            new_canvas = change_char(new_char, canvas)
+            canvas = new_canvas
+            print(new_canvas)
+
 
 
 
