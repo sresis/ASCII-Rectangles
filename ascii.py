@@ -86,7 +86,6 @@ def change_char(canvas, rectangle_info):
     end_x = rectangle_info[rect_id][2]
     start_y = rectangle_info[rect_id][3]
     end_y = rectangle_info[rect_id][4]
-
     char = input('Input a new fill character:  ')
 
     j = 0
@@ -100,13 +99,71 @@ def change_char(canvas, rectangle_info):
         j += 1
     return canvas
 
-def shift_rectangles(axis_input, canvas,  start_x, end_x, start_y, end_y, num=0):
-    """shifts the rectangles."""
-
-    canvas_len = len(canvas[0])
-    canvas_height = len(canvas)
+def axis_shift_input():
+    """prompts user for which axis they'd like to shift."""
     
+    axis = input('Which axis would you like to shift? (x or y):  ')
+    
+    return axis
 
+
+def shift_rectangles(rectangle_info, canvas, num=0):
+    """shifts the selected rectangle."""
+
+
+    rect_id = choose_rectangle(rectangle_info)
+    axis = axis_shift_input()
+    num = int(input('How many spaces would you like to shift it?  '))
+
+    # gets the info of the selected rectangle
+    fill_char = rectangle_info[rect_id][0]
+    start_x = rectangle_info[rect_id][1]
+    end_x = rectangle_info[rect_id][2]
+    start_y = rectangle_info[rect_id][3]
+    end_y = rectangle_info[rect_id][4]
+    # clears existing rectangle from canvas
+    j = 0
+    while j < 10:
+        if j >= start_y and j <= end_y:
+            i = 0
+            while i < 10:
+                if i >= start_x and i <= end_x and canvas[j][i] == fill_char:
+                    canvas[j][i] =  ' '
+                i += 1
+        j += 1
+    j = 0
+    
+    #updates values for rect
+    if axis == 'x':
+        start_x = start_x + num
+        end_x = end_x + num
+        j = 0
+        while j < 10:
+            if j >= start_y and j <= end_y:
+                i = 0
+                while i < 10:
+                    if i >= start_x and i <= end_x:
+                        canvas[j][i] =  fill_char
+                    i += 1
+            j += 1
+        j = 0
+    
+    elif axis == 'y':
+        start_y = start_y + num
+        end_y = end_y + num
+        j = 0
+        while j < 10:
+            if j >= start_y and j <= end_y:
+                i = 0
+                while i < 10:
+                    if i >= start_x and i <= end_x:
+                        canvas[j][i] =  fill_char
+                    i += 1
+            j += 1
+        j = 0
+    return canvas
+
+    
 def validate_start_val(start_val):
     """validates start value."""
     if start_val >=1 and start_val <= 10:
@@ -177,12 +234,20 @@ def prompt_user():
             
         #option to change fill character
         if user_choice == 'b':
-            new_char = input('Input a new fill character:  ')
             new_canvas = change_char(canvas, rectangle_info)
             canvas = new_canvas
             print_canvas(new_canvas)
+        if user_choice == 'c':
+            new_canvas = shift_rectangles(rectangle_info, canvas)
+            print(new_canvas)
+        
+        if user_choice == 'd':
+            rectangle_info = clear_rectangle_info()
+            canvas = create_blank_canvas()
 
         continue_playing = input('Would you like to keep playing? (Yes/No)?  ')
+    
+    print('Thanks for playing!')
 
 if __name__ == "__main__":
     prompt_user()
