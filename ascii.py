@@ -20,12 +20,12 @@ def create_blank_canvas(canvas_len=10, canvas_height=10):
     # make rows on top of each other
     adj_matrix = np.array(matrix)
     return adj_matrix
-
-def create_rectangle(start_x, start_y, end_x, end_y, fill_char):
+## need to store existing canvas somewhere
+def create_rectangle(start_x, start_y, end_x, end_y, fill_char, canvas):
     """ Creates a rectangle."""
-    canvas = create_blank_canvas()
-    canvas_len = len(canvas)
-    canvas_height = len(canvas[0])
+    
+    canvas_len = 10
+    canvas_height = 10
 
     j = 0
     while j < canvas_len:
@@ -43,8 +43,47 @@ def change_char(char):
     # get the rectangle
 
     # for each non-blank character, replace it with new char
+
+def validate_start_val(start_val):
+    """validates start value."""
+    if start_val >=1 and start_val <= 10:
+        pass
+    else:
+        start_val = int(input("Invalid! Input start value (1-10):  "))
+
+def prompt_user():
+    """prompts user to create rectangle."""
     
+    #intro message
+    print('Welcome to Make a Rectangle!')
+    print('------------------------')
+   
+    ## create blank canvas
+    canvas = create_blank_canvas()
+
+    continue_playing = input('Would you like to play? (Yes/No)?  ')
+    
+    while continue_playing == 'Yes':
+
+        ## prompt for inputs
+        start_x = int(input("Start rectangle in column (1-10):  "))
+        # form validation
+        validate_start_val(start_x)
+        end_x = int(input("End rectangle in column (1-10):  "))
+        start_y = int(input("Start rectangle in row (1-10):  "))
+        # form validation
+        validate_start_val(start_x)
+        end_y = int(input("End rectangle in row (1-10):  "))
+        fill_char = input("Choose a single character to fill rectangle:  ")
+        new_canvas = create_rectangle(start_x, start_y, 
+        end_x, end_y, fill_char, canvas)
+        print(new_canvas)
+        #resets canvas to be the new canvas 
+        canvas = new_canvas
 
 
-print(create_rectangle(1, 1, 3, 8, 'x'))
-print(create_rectangle(1, 1, 3, 4, 'o'))
+
+        continue_playing = input('Would you like to play? (Yes/No)?  ')
+
+if __name__ == "__main__":
+    prompt_user()
